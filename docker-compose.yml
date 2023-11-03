@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+  client:
+    build: ./client
+    container_name: react-ui
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+    networks:
+      - mern-network
+
+  server:
+    build: ./server
+    container_name: node-api
+    restart: always
+    ports:
+      - "3001:3001"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - mern-network
+
+  db:
+    image: mongo
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    networks:
+      - mern-network
+
+networks:
+  mern-network:
+    driver: bridge
